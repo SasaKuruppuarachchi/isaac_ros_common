@@ -23,3 +23,4 @@ COPY scripts/hotplug-realsense.sh /opt/realsense/hotplug-realsense.sh
 
 # Copy custom udev rules file
 COPY udev_rules/99-realsense-libusb-custom.rules /etc/udev/rules.d/99-realsense-libusb-custom.rules
+RUN apt-get install -y ros-humble-isaac-ros-visual-slam
