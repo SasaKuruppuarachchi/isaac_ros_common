@@ -197,6 +197,8 @@ docker run -it --rm \
     --network host \
     ${DOCKER_ARGS[@]} \
     -v $ISAAC_ROS_DEV_DIR:/workspaces/isaac_ros-dev \
+    -v /home/sasa/workspace/dds:/workspaces/dds \
+    -v /home/sasa/workspace/px4_ros2:/workspaces/px4_ros2 \
     -v /dev/*:/dev/* \
     -v /etc/localtime:/etc/localtime:ro \
     --name "$CONTAINER_NAME" \
