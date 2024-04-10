@@ -26,8 +26,9 @@ COPY udev_rules/99-realsense-libusb-custom.rules /etc/udev/rules.d/99-realsense-
 RUN apt-get install -y ros-humble-isaac-ros-visual-slam
 
 # tmux
-RUN apt install tmux -y
-RUN git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-RUN mkdir ~/tmux
-RUN wget https://raw.githubusercontent.com/SasaKuruppuarachchi/SasaKuruppuarachchi/main/.tmux.conf -P ~/
+RUN apt install tmux tmuxinator iputils-ping -y
+#RUN git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+#RUN mkdir ~/tmux
+#RUN wget https://raw.githubusercontent.com/SasaKuruppuarachchi/SasaKuruppuarachchi/main/.tmux.conf -P /home/admin/
+#RUN usermod -aG sudo admin
 #RUN echo 'alias qgc="./QGroundControl.AppImage"' >> ~/.bashrc 

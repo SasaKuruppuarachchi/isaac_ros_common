@@ -46,25 +46,31 @@ tmux send-keys -t 2 "ros2 launch px4_ros_com sensor_combined_listener.launch.py"
 
 #eval
 tmux select-window -t sensor_test
-
+tmux split-window -v -t 1
 tmux send-keys -t 1 "cd /workspaces/isaac_ros-dev" C-m
 tmux send-keys -t 1 "colcon build --symlink-install" C-m
 tmux send-keys -t 1 "source install/setup.bash" C-m
 tmux send-keys -t 1 "ros2 launch realsense2_camera rs_launch.py pointcloud.enable:=True enable_infra1:=True enable_infra2:=True enable_gyro:=True enable_accel:=True" C-m
+
+tmux send-keys -t 2 "rviz2 -d /workspaces/isaac_ros-dev/src/realsense-ros/realsense2_camera/launch/default.rviz"
+
+
+
+#yolact_test
+tmux select-window -t v-slam
+tmux split-window -v -t 1
+tmux send-keys -t 1 "cd /workspaces/isaac_ros-dev" C-m
+#tmux send-keys -t 1 "colcon build --symlink-install" C-m
+tmux send-keys -t 1 "source install/setup.bash" C-m
+tmux send-keys -t 1 "ros2 launch isaac_ros_visual_slam isaac_ros_visual_slam_realsense.launch.py"
+
+tmux send-keys -t 2 "rviz2 -d /workspaces/isaac_ros-dev/src/isaac_ros_visual_slam/isaac_ros_visual_slam/rviz/realsense1.cfg.rviz"
 
 #debug
 tmux select-window -t debug
 tmux send-keys -t 1 "cd /workspaces/px4_ros2" C-m
 tmux send-keys -t 1 "source install/setup.bash" C-m
 tmux send-keys -t 1 "ros2 topic list" C-m
-
-#yolact_test
-tmux select-window -t v-slam
-tmux send-keys -t 1 "cd /workspaces/isaac_ros-dev" C-m
-tmux send-keys -t 1 "colcon build --symlink-install" C-m
-tmux send-keys -t 1 "source install/setup.bash" C-m
-tmux send-keys -t 1 "ros2 launch isaac_ros_visual_slam isaac_ros_visual_slam_realsense.launch.py"
-
 
 tmux select-window -t main
 #----------------------------------------------------------------------------
