@@ -43,8 +43,9 @@ fi
 
 ISAAC_ROS_DEV_DIR="${ISAAC_ROS_WS}"
 SKIP_IMAGE_BUILD=0
+SKIP_REGISTRY_CHECK=0
 VERBOSE=0
-VALID_ARGS=$(getopt -o hvd:i:ba: --long help,verbose,isaac_ros_dev_dir:,image_key:,skip_image_build,docker_arg: -- "$@")
+VALID_ARGS=$(getopt -o hvd:i:ba: --long help,verbose,isaac_ros_dev_dir:,image_key:,skip_image_build,skip-registry-check,docker_arg: -- "$@")
 eval set -- "$VALID_ARGS"
 while [ : ]; do
   case "$1" in
@@ -58,6 +59,10 @@ while [ : ]; do
         ;;
     -b | --skip_image_build)
         SKIP_IMAGE_BUILD=1
+        shift
+        ;;
+    --skip-registry-check)
+        SKIP_REGISTRY_CHECK=1
         shift
         ;;
     -a | --docker_arg)
@@ -94,7 +99,7 @@ ON_EXIT+=("popd")
 
 # Fall back if isaac_ros_dev_dir not specified
 if [[ -z "$ISAAC_ROS_DEV_DIR" ]]; then
-    ISAAC_ROS_DEV_DIR_DEFAULTS=("$HOME/workspaces/isaac" "/workspaces/isaac" "/mnt/nova_ssd/workspaces/isaac")
+    ISAAC_ROS_DEV_DIR_DEFAULTS=("$HOME/workspaces/isaac_ros-dev" "/workspaces/isaac_ros-dev" "/mnt/nova_ssd/workspaces/isaac_ros-dev")
     for ISAAC_ROS_DEV_DIR in "${ISAAC_ROS_DEV_DIR_DEFAULTS[@]}"
     do
         if [[ -d "$ISAAC_ROS_DEV_DIR" ]]; then
@@ -202,7 +207,13 @@ print_info "Launching Isaac ROS Dev container with image key ${BASE_IMAGE_KEY}: 
 # Build image to launch
 if [[ $SKIP_IMAGE_BUILD -ne 1 ]]; then
     print_info "Building $BASE_IMAGE_KEY base as image: $BASE_NAME"
-   $ROOT/build_image_layers.sh --image_key "$BASE_IMAGE_KEY" --image_name "$BASE_NAME"
+    # Forward optional flags to the build helper
+    BUILD_HELPER_ARGS=()
+    if [[ $SKIP_REGISTRY_CHECK -eq 1 ]]; then
+        BUILD_HELPER_ARGS+=("--skip_registry_check")
+    fi
+
+    $ROOT/build_image_layers.sh --image_key "$BASE_IMAGE_KEY" --image_name "$BASE_NAME" "${BUILD_HELPER_ARGS[@]}"
 
     # Check result
     if [ $? -ne 0 ]; then
@@ -232,6 +243,7 @@ DOCKER_ARGS+=("-e USER")
 DOCKER_ARGS+=("-e ISAAC_ROS_WS=/workspaces/isaac_ros-dev")
 DOCKER_ARGS+=("-e HOST_USER_UID=`id -u`")
 DOCKER_ARGS+=("-e HOST_USER_GID=`id -g`")
+DOCKER_ARGS+=("-v /dev/bus/usb:/dev/bus/usb")
 
 # Forward SSH Agent to container if the ssh agent is active.
 if [[ -n $SSH_AUTH_SOCK ]]; then
@@ -240,19 +252,23 @@ if [[ -n $SSH_AUTH_SOCK ]]; then
 fi
 
 if [[ $PLATFORM == "aarch64" ]]; then
-    DOCKER_ARGS+=("-e NVIDIA_VISIBLE_DEVICES=nvidia.com/gpu=all,nvidia.com/pva=all")
     DOCKER_ARGS+=("-v /usr/bin/tegrastats:/usr/bin/tegrastats")
     DOCKER_ARGS+=("-v /tmp/:/tmp/")
+    DOCKER_ARGS+=("-e DISPLAY")
     DOCKER_ARGS+=("-v /usr/lib/aarch64-linux-gnu/tegra:/usr/lib/aarch64-linux-gnu/tegra")
     DOCKER_ARGS+=("-v /usr/src/jetson_multimedia_api:/usr/src/jetson_multimedia_api")
     DOCKER_ARGS+=("--pid=host")
     DOCKER_ARGS+=("-v /usr/share/vpi3:/usr/share/vpi3")
     DOCKER_ARGS+=("-v /dev/input:/dev/input")
+    DOCKER_ARGS+=("-v /dev/i2c-1:/dev/i2c-1")
+    #DOCKER_ARGS+=("--group-add i2c")
 
     # If jtop present, give the container access
     if [[ $(getent group jtop) ]]; then
         DOCKER_ARGS+=("-v /run/jtop.sock:/run/jtop.sock:ro")
     fi
+else
+    DOCKER_ARGS+=("-e NVIDIA_VISIBLE_DEVICES=nvidia.com/gpu=all,nvidia.com/pva=all")
 fi
 
 # Optionally load custom docker arguments from file
@@ -280,12 +296,16 @@ print_info "Running $CONTAINER_NAME"
 if [[ $VERBOSE -eq 1 ]]; then
     set -x
 fi
-docker run -it --rm \
+docker run -d -it --rm \
     --privileged \
     --network host \
     --ipc=host \
     ${DOCKER_ARGS[@]} \
     -v $ISAAC_ROS_DEV_DIR:/workspaces/isaac_ros-dev \
+    -v $WORKSPACES_DIR/dds:/workspaces/dds \
+    -v $WORKSPACES_DIR/agipix_control:/workspaces/agipix_control \
+    -v $WORKSPACES_DIR/lidar_ws:/workspaces/lidar_ws \
+    -v $HOME/.profile:/home/admin/.profile \
     -v /etc/localtime:/etc/localtime:ro \
     --name "$CONTAINER_NAME" \
     --runtime nvidia \

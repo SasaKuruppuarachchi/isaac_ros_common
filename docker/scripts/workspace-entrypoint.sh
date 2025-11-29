@@ -42,6 +42,20 @@ if [ -S /run/jtop.sock ]; then
   adduser ${USERNAME} jtop >/dev/null
 fi
 
+# tmux
+git clone https://github.com/tmux-plugins/tpm /home/admin/.tmux/plugins/tpm
+wget https://raw.githubusercontent.com/SasaKuruppuarachchi/SasaKuruppuarachchi/main/.tmux.conf -P /home/admin/
+
+# Append custom bashrc snippet (idempotent)
+BASHRC_SNIPPET_SRC="/workspaces/isaac_ros-dev/src/isaac_ros_common/scripts/bashrc"
+if ! grep -q "isaac_ros_common container user shell customizations" /home/admin/.bashrc 2>/dev/null; then
+  if [ -f "$BASHRC_SNIPPET_SRC" ]; then
+    cat "$BASHRC_SNIPPET_SRC" >> /home/admin/.bashrc
+  else
+    echo "WARNING: bashrc snippet not found at $BASHRC_SNIPPET_SRC" >&2
+  fi
+fi
+
 # Run all entrypoint additions
 shopt -s nullglob
 for addition in /usr/local/bin/scripts/entrypoint_additions/*.sh; do
@@ -53,6 +67,17 @@ for addition in /usr/local/bin/scripts/entrypoint_additions/*.sh; do
     source ${addition}
   fi
 done
+
+#tentative
+# sudo apt-get update
+# rosdep update
+cd /workspaces/dds/Micro-XRCE-DDS-Agent/build && sudo make install && sudo ldconfig /usr/local/lib/
+cd /workspaces/lidar_ws/src/Livox-SDK2/build && sudo make install && sudo ldconfig /usr/local/lib/
+# cd /workspaces/isaac_ros-dev
+
+# cd /opt/depthgoals
+# pip install .
+# source /opt/depthgoals/src/depthgoals/deployment/src/install/setup.bash
 
 # Restart udev daemon
 service udev restart

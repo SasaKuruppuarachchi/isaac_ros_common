@@ -487,15 +487,11 @@ RUN --mount=type=cache,target=/var/cache/apt \
     sudo \
     udev
 
-# Copy scripts
+# Copy scripts !!! IMPORTANT: Entripoint script moving is moved to the agipix layer to avoid long build times in case of an edit
 RUN mkdir -p /usr/local/bin/scripts
-COPY scripts/*entrypoint.sh /usr/local/bin/scripts/
-RUN chmod +x /usr/local/bin/scripts/*.sh || true
 
 # Copy script additions
 RUN mkdir -p /usr/local/bin/scripts/entrypoint_additions
-COPY scripts/entrypoint_addition[s]/*.sh /usr/local/bin/scripts/entrypoint_additions/
-RUN chmod +x /usr/local/bin/scripts/entrypoint_additions/*.sh || true
 
 # Copy middleware profiles
 RUN mkdir -p /usr/local/share/middleware_profiles
