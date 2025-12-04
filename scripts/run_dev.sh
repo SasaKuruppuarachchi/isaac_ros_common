@@ -301,10 +301,11 @@ docker run -d -it --rm \
     --network host \
     --ipc=host \
     ${DOCKER_ARGS[@]} \
-    -v $ISAAC_ROS_DEV_DIR:/workspaces/isaac_ros-dev \
+    -v $ISAAC_ROS_DEV_DIR:/workspaces/isaac_ws/src/isaac_ros-dev \
     -v $WORKSPACES_DIR/dds:/workspaces/dds \
     -v $WORKSPACES_DIR/agipix_control:/workspaces/agipix_control \
     -v $WORKSPACES_DIR/lidar_ws:/workspaces/lidar_ws \
+    -v $WORKSPACES_DIR/logging:/workspaces/logging \
     -v $HOME/.profile:/home/admin/.profile \
     -v /etc/localtime:/etc/localtime:ro \
     --name "$CONTAINER_NAME" \

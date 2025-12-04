@@ -20,7 +20,7 @@ export PX4_FOLDER=/workspaces/aerostack2_ws/src/thirdparty/PX4-Autopilot
 alias runagi='cd /workspaces/agipix_control/src/agipix_px4_autonomy/tmux/ && ./start.sh -s'
 alias sorcon='source /workspaces/agipix_control/install/setup.bash'
 alias bilcon='cd /workspaces/agipix_control && colcon build --packages-skip px4_msgs'
-
+alias billidar='cd /workspaces/lidar_ws && colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release'
 # Lidar workspace
 alias sorlidar='source /workspaces/lidar_ws/install/setup.bash'
 
