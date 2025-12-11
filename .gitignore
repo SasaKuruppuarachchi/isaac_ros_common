@@ -4,3 +4,5 @@
 # Ignore config files
 get-pip.py
 #.isaac_ros_common-config
+verify_cuda_cudnn
+test_ocv_cuda

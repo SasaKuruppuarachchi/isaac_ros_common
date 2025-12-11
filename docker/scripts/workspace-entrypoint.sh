@@ -47,7 +47,7 @@ git clone https://github.com/tmux-plugins/tpm /home/admin/.tmux/plugins/tpm
 wget https://raw.githubusercontent.com/SasaKuruppuarachchi/SasaKuruppuarachchi/main/.tmux.conf -P /home/admin/
 
 # Append custom bashrc snippet (idempotent)
-BASHRC_SNIPPET_SRC="/workspaces/isaac_ws/src/isaac_ros-dev/scripts/bashrc"
+BASHRC_SNIPPET_SRC="/workspaces/isaac_ros-dev/src/isaac_ros_common/scripts/bashrc"
 if ! grep -q "isaac_ros_common container user shell customizations" /home/admin/.bashrc 2>/dev/null; then
   if [ -f "$BASHRC_SNIPPET_SRC" ]; then
     cat "$BASHRC_SNIPPET_SRC" >> /home/admin/.bashrc

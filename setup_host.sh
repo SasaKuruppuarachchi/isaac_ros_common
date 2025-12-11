@@ -1,6 +1,6 @@
 echo "alias ebash='gedit ~/.bashrc'" >> ~/.bashrc
 echo "alias sbash='source ~/.bashrc'" >> ~/.bashrc
-echo "alias agidocker="cd ~/workspace/raicam-ros/src/isaac_ros_common/scripts/ && ./run_dev.sh"" >> ~/.bashrc
+echo "alias agidocker="cd ~/workspace/raicam-ros/src/isaac_ros_common/scripts/ && ./run_dev.sh --skip-registry-check"" >> ~/.bashrc
 
 echo "export CUDA=12.6" >> ~/.bashrc
 echo "export PATH=/usr/local/cuda-$CUDA/bin${PATH:+:${PATH}}" >> ~/.bashrc

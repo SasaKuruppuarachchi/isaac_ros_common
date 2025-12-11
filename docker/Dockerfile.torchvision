@@ -12,11 +12,11 @@ ENV FORCE_CUDA=1
 # COPY torchvision/build.sh /tmp/torchvision/
 # RUN cd /tmp/torchvision/  && \
 #     git clone -b v0.17.2 https://github.com/pytorch/vision.git
-ARG TORCH_CUDA_ARCH_LIST="5.3;6.2;7.2;8.7"
+ARG TORCH_CUDA_ARCH_LIST="8.7;8.9"
 # RUN cd /tmp/torchvision/vision  && \
 #     python setup.py develop
 
-ARG TORCHVISION_VERSION=0.17.2 \
+ARG TORCHVISION_VERSION=0.20.0 \
     FORCE_BUILD=on
 
 COPY torchvision/build.sh torchvision/install.sh /tmp/torchvision/

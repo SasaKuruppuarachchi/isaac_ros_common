@@ -493,6 +493,7 @@ RUN mkdir -p /usr/local/bin/scripts
 # Copy script additions
 RUN mkdir -p /usr/local/bin/scripts/entrypoint_additions
 
+
 # Copy middleware profiles
 RUN mkdir -p /usr/local/share/middleware_profiles
 COPY middleware_profile[s]/*profile.xml /usr/local/share/middleware_profiles/
