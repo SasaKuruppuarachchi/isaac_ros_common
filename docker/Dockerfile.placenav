@@ -3,7 +3,6 @@ FROM ${BASE_IMAGE}
 
 # Install dependencies
 RUN pip install opencv-python \
-    numpy==1.* \
     opencv-python \
     albumentations \
     h5py \

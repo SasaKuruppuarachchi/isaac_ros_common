@@ -42,11 +42,11 @@ RUN apt-get update && \
 # Install pip dependencies
 RUN python3 -m pip install --upgrade pip && \
     pip3 install \
-        kconfiglib smbus jinja2 empy jsonschema pyros-genmsg packaging toml numpy future \
+        kconfiglib smbus jinja2 empy jsonschema pyros-genmsg packaging toml future \
         freesimplegui pymap3d \
         pylint flake8==4.0.1 pycodestyle==2.8 cmakelint cpplint \
         colcon-lcov-result \
-        ultralytics seaborn opencv-python numpy==1.* albumentations h5py warmup_scheduler \
+        ultralytics seaborn albumentations h5py warmup_scheduler \
         diffusers==0.11.1 vit-pytorch efficientnet_pytorch \
         "git+https://github.com/robodhruv/visualnav-transformer.git@main#egg=vint-train&subdirectory=train" && \
     pip3 install -e git+https://github.com/real-stanford/diffusion_policy.git@main#egg=diffusion_policy
