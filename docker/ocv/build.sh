@@ -44,12 +44,12 @@ if [[ "${USE_VENV}" == "1" ]]; then
 	# shellcheck disable=SC1091
 	source "${VENV_DIR}/bin/activate"
 	python -m pip install --upgrade pip
-	python -m pip install numpy
+	# python -m pip install numpy
 	PY_BIN="${VENV_DIR}/bin/python"
 else
 	info "Ensuring numpy available for build"
 	"${PY_BIN}" -m pip install --upgrade pip
-	"${PY_BIN}" -m pip install numpy
+	#"${PY_BIN}" -m pip install numpy
 fi
 
 # Resolve numpy include dir for CMake
