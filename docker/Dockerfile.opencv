@@ -52,6 +52,7 @@ FROM ${BASE_IMAGE}
 ARG PYTHON_VERSION=3.10.12
 ARG OPENCV_VERSION=4.11.0
 ARG WORKSPACE_ROOT=/opt/ocv
+RUN python3 -m pip uninstall -y opencv opencv-python opencv-contrib-python python3-opencv
 
 ENV DEBIAN_FRONTEND=noninteractive \
 	PKG_CONFIG_PATH=${WORKSPACE_ROOT}/build/install/lib/pkgconfig:${PKG_CONFIG_PATH} \

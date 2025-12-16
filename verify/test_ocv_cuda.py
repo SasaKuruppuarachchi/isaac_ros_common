@@ -16,8 +16,62 @@ print("Active GPU device ID:", dev)
 
 try:
     info = cv2.cuda.DeviceInfo(dev)
-    print("GPU Name:", info.name())
-    print("Compute Capability:", info.majorVersion(), ".", info.minorVersion())
+    # Prefer global device-name helper; fall back to various DeviceInfo accessors
+    gpu_name = "<unavailable>"
+
+    # Attempt module-level helper
+    try:
+        candidate = cv2.cuda.getDeviceName(dev)
+        if candidate:
+            gpu_name = candidate
+    except Exception:
+        pass
+
+    # Fallbacks: try multiple attribute/method names exposed by different OpenCV builds
+    if gpu_name == "<unavailable>":
+        for attr in ("name", "deviceName", "getName", "getDeviceName"):
+            try:
+                val = getattr(info, attr, None)
+                if val is None:
+                    continue
+                gpu_name = val() if callable(val) else val
+                if gpu_name:
+                    break
+            except Exception:
+                continue
+
+    # Last resort: other libraries or system query
+    if gpu_name == "<unavailable>":
+        try:
+            import torch  # noqa: WPS433
+            print("Fallback: Querying torch for GPU name...")
+            if torch.cuda.is_available():
+                gpu_name = torch.cuda.get_device_name(dev)
+        except Exception:
+            pass
+
+    if gpu_name == "<unavailable>":
+        import subprocess
+
+        try:
+            print("Fallback: Querying nvidia-smi for GPU name...")
+            output = subprocess.check_output(
+                ["nvidia-smi", "--query-gpu=name", "--format=csv,noheader", "-i", str(dev)],
+                stderr=subprocess.DEVNULL,
+                text=True,
+            ).strip()
+            if output:
+                gpu_name = output
+        except Exception:
+            pass
+    print("GPU Name:", gpu_name)
+
+    major = info.majorVersion() if hasattr(info, "majorVersion") else None
+    minor = info.minorVersion() if hasattr(info, "minorVersion") else None
+    if major is not None and minor is not None:
+        print("Compute Capability:", major, ".", minor)
+    else:
+        print("Compute Capability: <unavailable>")
 except Exception as e:
     print("Warning: Could not read device info:", e)
 

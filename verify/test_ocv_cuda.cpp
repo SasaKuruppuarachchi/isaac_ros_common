@@ -48,8 +48,8 @@ int main() {
 export PKG_CONFIG_PATH=/workspaces/ocv/build/install/lib/pkgconfig:$PKG_CONFIG_PATH
 export LD_LIBRARY_PATH=/workspaces/ocv/build/install/lib:$LD_LIBRARY_PATH
 
-# Verify you see 4.12.0 via the correct .pc file
-pkg-config --modversion opencv    # expect 4.12.0
+# Verify you see 4.11.0 via the correct .pc file
+pkg-config --modversion opencv    # expect 4.11.0
 pkg-config --cflags opencv | head
 pkg-config --libs opencv | head
 

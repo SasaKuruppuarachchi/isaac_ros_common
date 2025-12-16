@@ -4,7 +4,7 @@
 # but avoids sudo and writes artifacts to a relocatable prefix for later copy.
 set -euo pipefail
 
-OPENCV_VERSION=${OPENCV_VERSION:-4.12.0}
+OPENCV_VERSION=${OPENCV_VERSION:-4.11.0}
 PYTHON_VERSION=${PYTHON_VERSION:-3.10.12}
 CUDA_ARCH_BIN=${CUDA_ARCH_BIN:-${CUDA_DOCKER_ARCH:-8.7}}
 WORKSPACE_ROOT=${WORKSPACE_ROOT:-/opt/ocv}

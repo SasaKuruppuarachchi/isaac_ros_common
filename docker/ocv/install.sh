@@ -3,7 +3,7 @@
 # Install the OpenCV wheel built by build.sh and configure loader paths.
 set -euo pipefail
 
-OPENCV_VERSION=${OPENCV_VERSION:-4.12.0}
+OPENCV_VERSION=${OPENCV_VERSION:-4.11.0}
 PYTHON_VERSION=${PYTHON_VERSION:-3.10.12}
 WORKSPACE_ROOT=${WORKSPACE_ROOT:-/opt/ocv}
 INSTALL_PREFIX=${INSTALL_PREFIX:-${WORKSPACE_ROOT}/build/install}
