@@ -57,4 +57,6 @@ pkg-config --libs opencv | head
 g++ -std=c++17 /workspaces/isaac_ros-dev/src/isaac_ros_common/verify/test_ocv_cuda.cpp \
     -o test_ocv_cuda \
     $(pkg-config --cflags --libs opencv)
+
+For x86_64 architecture, replace 'aarch64-linux' with 'x86_64-linux'.
 */

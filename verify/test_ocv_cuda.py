@@ -68,12 +68,15 @@ try:
 
     major = info.majorVersion() if hasattr(info, "majorVersion") else None
     minor = info.minorVersion() if hasattr(info, "minorVersion") else None
+    cc_str = None
     if major is not None and minor is not None:
+        cc_str = f"{major}.{minor}"
         print("Compute Capability:", major, ".", minor)
     else:
         print("Compute Capability: <unavailable>")
 except Exception as e:
     print("Warning: Could not read device info:", e)
+    cc_str = None
 
 # Create CPU image
 import numpy as np
@@ -85,9 +88,21 @@ gpu.upload(img)
 
 # CUDA Gaussian blur
 gauss = cv2.cuda.createGaussianFilter(gpu.type(), gpu.type(), (15,15), 2)
-blur_gpu = gauss.apply(gpu)
 
-# Download back
-blur_img = blur_gpu.download()
-
-print("CUDA Gaussian blur completed successfully!")
+try:
+    blur_gpu = gauss.apply(gpu)
+    blur_img = blur_gpu.download()
+    print("CUDA Gaussian blur completed successfully!")
+except cv2.error as err:
+    err_msg = str(err).lower()
+    print("CUDA Gaussian blur failed:", err)
+    if "no kernel image is available" in err_msg:
+        cc_note = f"compute capability {cc_str}" if cc_str else "this GPU"
+        print(
+            "Likely cause: the OpenCV CUDA build lacks binaries/PTX for",
+            cc_note,
+            "— rebuild OpenCV with an appropriate CUDA_ARCH_BIN/PTX target (e.g., -D CUDA_ARCH_BIN=8.9).",
+        )
+    print("Falling back to CPU GaussianBlur for verification...")
+    blur_img = cv2.GaussianBlur(img, (15, 15), 2)
+    print("CPU Gaussian blur completed; CUDA path skipped.")

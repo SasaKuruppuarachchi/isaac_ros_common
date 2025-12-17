@@ -14,4 +14,10 @@ g++ verify_cuda_cudnn.cpp \
     -I/usr/local/cuda-12.6/targets/aarch64-linux/include \
     -L/usr/local/cuda-12.6/targets/aarch64-linux/lib \
     -lcudart -lcudnn -o verify_cuda_cudnn
+
+For x86_64 architecture, replace 'aarch64-linux' with 'x86_64-linux'.
+g++ verify_cuda_cudnn.cpp \
+    -I/usr/local/cuda-12.6/targets/x86_64-linux/include \
+    -L/usr/local/cuda-12.6/targets/x86_64-linux/lib \
+    -lcudart -lcudnn -o verify_cuda_cudnn
 */
