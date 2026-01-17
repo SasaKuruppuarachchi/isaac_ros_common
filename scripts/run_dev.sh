@@ -244,6 +244,7 @@ DOCKER_ARGS+=("-e ISAAC_ROS_WS=/workspaces/isaac_ros-dev")
 DOCKER_ARGS+=("-e HOST_USER_UID=`id -u`")
 DOCKER_ARGS+=("-e HOST_USER_GID=`id -g`")
 DOCKER_ARGS+=("-v /dev/bus/usb:/dev/bus/usb")
+DOCKER_ARGS+=("-e TERM=xterm-256color")
 
 # Forward SSH Agent to container if the ssh agent is active.
 if [[ -n $SSH_AUTH_SOCK ]]; then
@@ -307,7 +308,7 @@ docker run -d -it --rm \
     -v $WORKSPACES_DIR/agipix_control:/workspaces/agipix_control \
     -v $WORKSPACES_DIR/lidar_ws:/workspaces/lidar_ws \
     -v $WORKSPACES_DIR/logging:/workspaces/logging \
-    -v $WORKSPACES_DIR/ocv:/workspaces/ocv \
+    -v $WORKSPACES_DIR/a2rl:/workspaces/a2rl \
     -v $HOME/.profile:/home/admin/.profile \
     -v /etc/localtime:/etc/localtime:ro \
     --name "$CONTAINER_NAME" \
