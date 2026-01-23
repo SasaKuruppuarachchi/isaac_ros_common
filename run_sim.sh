@@ -17,7 +17,7 @@ tmux split-window -h -t 1
 # run
 sleep 1
 tmux send-keys -t 3 "cd ~/PegasusSimulator/examples" C-m
-tmux send-keys -t 3 "ISAACSIM_PYTHON 8_agipix.py" 
+tmux send-keys -t 3 "isaac_run 8_agipix.py" 
 
 tmux send-keys -t 2 "cd && ./QGroundControl-x86_64.AppImage" C-m
 
