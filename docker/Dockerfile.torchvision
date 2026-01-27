@@ -16,7 +16,7 @@ ARG TORCH_CUDA_ARCH_LIST="8.7;8.9"
 # RUN cd /tmp/torchvision/vision  && \
 #     python setup.py develop
 
-ARG TORCHVISION_VERSION=0.20.0 \
+ARG TORCHVISION_VERSION=0.25.0 \
     FORCE_BUILD=on
 
 COPY torchvision/build.sh torchvision/install.sh /tmp/torchvision/
