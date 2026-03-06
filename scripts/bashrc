@@ -21,7 +21,7 @@ export AEROSTACK2_WORKSPACE=/workspaces/aerostack2_ws
 export PX4_FOLDER=/workspaces/aerostack2_ws/src/thirdparty/PX4-Autopilot
 
 # Agipix control stack
-alias runagi='cd /workspaces/agipix_control/src/agipix_px4_autonomy/tmux/ && ./start.sh -s'
+alias runagi='cd /workspaces/agipix_control/src/agipix_autonomy/tmux/ && ./start.sh -s'
 alias sorcon='source /workspaces/agipix_control/install/setup.bash'
 alias bilcon='cd /workspaces/agipix_control && colcon build --packages-skip px4_msgs'
 alias billidar='cd /workspaces/lidar_ws && colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release'
@@ -51,7 +51,12 @@ export CUDNN_LIBRARY=/usr/lib/aarch64-linux-gnu/libcudnn.so
 # Environment variables
 export PATH="$HOME/.local/bin:$PATH"
 export ROS_DOMAIN_ID=3 # Agipix-hard domain sim-3
-export LD_LIBRARY_PATH="/workspaces/agipix_control/src/agipix_px4_autonomy/trajectory_planner/include/trajectory_planner/third_party/lib/x86:$LD_LIBRARY_PATH"
+#export LD_LIBRARY_PATH="/workspaces/agipix_control/src/agipix_autonomy/trajectory_planner/include/trajectory_planner/third_party/lib/x86:$LD_LIBRARY_PATH"
 export ISAAC_ROS_WS="/workspaces/isaac_ros-dev"
+
+export RCUTILS_COLORIZED_OUTPUT=1
+export RCUTILS_LOGGING_USE_STDOUT=1
+export RCUTILS_CONSOLE_OUTPUT_FORMAT='[{severity}] [{time}] [{name}]: {message}'
+export PYTHONUNBUFFERED=1
 # End of customizations
 ############################################################

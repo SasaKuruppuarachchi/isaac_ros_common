@@ -75,6 +75,10 @@ cd /workspaces/dds/Micro-XRCE-DDS-Agent/build && sudo make install && sudo ldcon
 cd /workspaces/lidar_ws/src/Livox-SDK2/build && sudo make install && sudo ldconfig /usr/local/lib/
 # cd /workspaces/isaac_ros-dev
 
+# install logging package
+cd /workspaces/logging/src/agi_logger
+pip install -e .
+
 # cd /opt/depthgoals
 # pip install .
 # source /opt/depthgoals/src/depthgoals/deployment/src/install/setup.bash

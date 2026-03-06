@@ -66,5 +66,5 @@ RUN apt-get install -y libgl1 libglib2.0-0 libsm6 libxext6 libxrender1 libx11-xc
 RUN bash -c "$(curl -sLo- https://superfile.dev/install.sh)"
 ### !!! @TODO: Temporary fix for torchvision compatibility with torch 2.1 and cuda 12.6 ### 
 RUN pip3 uninstall -y torchvision && pip3 install --pre torch torchvision torchaudio --index-url https://download.pytorch.org/whl/nightly/cu128 
-RUN pip3 install torchrl hydra-core
+RUN pip3 install torchrl hydra-core && apt-get install ros-humble-octomap-server ros-humble-octomap-rviz-plugins
 

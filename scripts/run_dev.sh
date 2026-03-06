@@ -244,6 +244,7 @@ DOCKER_ARGS+=("-e HOST_USER_UID=`id -u`")
 DOCKER_ARGS+=("-e HOST_USER_GID=`id -g`")
 DOCKER_ARGS+=("-v /dev/bus/usb:/dev/bus/usb")
 DOCKER_ARGS+=("-e TERM=xterm-256color")
+DOCKER_ARGS+=("-v /dev/input:/dev/input")
 
 # Forward SSH Agent to container if the ssh agent is active.
 if [[ -n $SSH_AUTH_SOCK ]]; then
@@ -260,7 +261,6 @@ if [[ $PLATFORM == "aarch64" ]]; then
     DOCKER_ARGS+=("-v /usr/src/jetson_multimedia_api:/usr/src/jetson_multimedia_api")
     DOCKER_ARGS+=("--pid=host")
     DOCKER_ARGS+=("-v /usr/share/vpi3:/usr/share/vpi3")
-    DOCKER_ARGS+=("-v /dev/input:/dev/input")
     DOCKER_ARGS+=("-v /dev/i2c-1:/dev/i2c-1")
     #DOCKER_ARGS+=("--group-add i2c")
 
@@ -305,6 +305,7 @@ docker run -d -it --rm \
     -v $ISAAC_ROS_DEV_DIR:/workspaces/isaac_ros-dev/src/isaac_ros_common \
     -v $WORKSPACES_DIR/dds:/workspaces/dds \
     -v $WORKSPACES_DIR/agipix_control:/workspaces/agipix_control \
+    -v $WORKSPACES_DIR/upgrade_control:/workspaces/upgrade_control \
     -v $WORKSPACES_DIR/lidar_ws:/workspaces/lidar_ws \
     -v $WORKSPACES_DIR/logging:/workspaces/logging \
     -v $WORKSPACES_DIR/a2rl:/workspaces/a2rl \
