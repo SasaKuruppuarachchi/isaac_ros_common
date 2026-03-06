@@ -5,6 +5,7 @@ set -euo pipefail
 
 OPENCV_VERSION=${OPENCV_VERSION:-4.11.0}
 PYTHON_VERSION=${PYTHON_VERSION:-3.10.12}
+NUMPY_VERSION_SPEC=${NUMPY_VERSION_SPEC:-<2}
 WORKSPACE_ROOT=${WORKSPACE_ROOT:-/opt/ocv}
 INSTALL_PREFIX=${INSTALL_PREFIX:-${WORKSPACE_ROOT}/build/install}
 WHEEL_DIR=${WHEEL_DIR:-${WORKSPACE_ROOT}/build/wheelhouse}
@@ -21,6 +22,9 @@ fi
 
 wheel_path="$(ls "${WHEEL_DIR}"/opencv*.whl 2>/dev/null | head -n1)"
 [[ -z "${wheel_path}" ]] && err "Wheel not found in ${WHEEL_DIR}"
+
+info "Installing numpy${NUMPY_VERSION_SPEC} for OpenCV runtime compatibility"
+"${PY_BIN}" -m pip install --upgrade --force-reinstall "numpy${NUMPY_VERSION_SPEC}"
 
 info "Installing wheel ${wheel_path}"
 "${PY_BIN}" -m pip install --force-reinstall --no-deps "${wheel_path}"

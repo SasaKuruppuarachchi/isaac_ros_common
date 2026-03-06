@@ -7,6 +7,7 @@ set -euo pipefail
 OPENCV_VERSION=${OPENCV_VERSION:-4.11.0}
 PYTHON_VERSION=${PYTHON_VERSION:-3.10.12}
 CUDA_ARCH_BIN=${CUDA_ARCH_BIN:-${CUDA_DOCKER_ARCH:-8.7}}
+NUMPY_VERSION_SPEC=${NUMPY_VERSION_SPEC:-<2}
 WORKSPACE_ROOT=${WORKSPACE_ROOT:-/workspaces/ocv}
 SRC_DIR=${SRC_DIR:-${WORKSPACE_ROOT}/opencv}
 CONTRIB_DIR=${CONTRIB_DIR:-${WORKSPACE_ROOT}/opencv_contrib}
@@ -49,12 +50,12 @@ if [[ "${USE_VENV}" == "1" ]]; then
 	# shellcheck disable=SC1091
 	source "${VENV_DIR}/bin/activate"
 	python -m pip install --upgrade pip
-	python -m pip install numpy
+	python -m pip install "numpy${NUMPY_VERSION_SPEC}"
 	PY_BIN="${VENV_DIR}/bin/python"
 else
-	info "Ensuring numpy available for build"
+	info "Ensuring numpy${NUMPY_VERSION_SPEC} available for build"
 	"${PY_BIN}" -m pip install --upgrade pip
-	"${PY_BIN}" -m pip install numpy
+	"${PY_BIN}" -m pip install --upgrade --force-reinstall "numpy${NUMPY_VERSION_SPEC}"
 fi
 
 # Resolve numpy include dir for CMake
@@ -164,8 +165,10 @@ if [[ -z "${wheel_path}" ]]; then
 fi
 info "Installing wheel ${wheel_path}"
 if [[ "${USE_VENV}" == "1" ]]; then
+	"${PY_BIN}" -m pip install --upgrade --force-reinstall "numpy${NUMPY_VERSION_SPEC}"
 	"${PY_BIN}" -m pip install --force-reinstall --no-deps "${wheel_path}"
 else
+	sudo "${PY_BIN}" -m pip install --upgrade --force-reinstall "numpy${NUMPY_VERSION_SPEC}"
 	sudo "${PY_BIN}" -m pip install --force-reinstall --no-deps "${wheel_path}"
 fi
 

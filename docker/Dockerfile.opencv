@@ -8,6 +8,7 @@ FROM ${BASE_IMAGE} AS ocv-builder
 ARG PYTHON_VERSION=3.10.12
 ARG OPENCV_VERSION=4.11.0
 ARG CUDA_ARCH_BIN=8.7,8.9
+ARG NUMPY_VERSION_SPEC=<2
 ARG WORKSPACE_ROOT=/opt/ocv
 
 ENV DEBIAN_FRONTEND=noninteractive
@@ -44,6 +45,7 @@ RUN chmod +x /tmp/ocv/build.sh /tmp/ocv/install.sh && \
 	WORKSPACE_ROOT=${WORKSPACE_ROOT} \
 	OPENCV_VERSION=${OPENCV_VERSION} \
 	PYTHON_VERSION=${PYTHON_VERSION} \
+    NUMPY_VERSION_SPEC=${NUMPY_VERSION_SPEC} \
 	CUDA_ARCH_BIN=${CUDA_ARCH_BIN} \
 	/tmp/ocv/build.sh
 
@@ -51,12 +53,13 @@ FROM ${BASE_IMAGE}
 
 ARG PYTHON_VERSION=3.10.12
 ARG OPENCV_VERSION=4.11.0
+ARG NUMPY_VERSION_SPEC=<2
 ARG WORKSPACE_ROOT=/opt/ocv
 RUN python3 -m pip uninstall -y opencv opencv-python opencv-contrib-python python3-opencv
 
 ENV DEBIAN_FRONTEND=noninteractive \
-	PKG_CONFIG_PATH=${WORKSPACE_ROOT}/build/install/lib/pkgconfig:${PKG_CONFIG_PATH} \
-	LD_LIBRARY_PATH=${WORKSPACE_ROOT}/build/install/lib:${LD_LIBRARY_PATH}
+    PKG_CONFIG_PATH=${WORKSPACE_ROOT}/build/install/lib/pkgconfig:${PKG_CONFIG_PATH:-} \
+    LD_LIBRARY_PATH=${WORKSPACE_ROOT}/build/install/lib:${LD_LIBRARY_PATH:-}
 
 RUN apt update && \
      apt install -y --no-install-recommends \
@@ -83,5 +86,6 @@ RUN chmod +x /tmp/ocv/install.sh && \
 	WORKSPACE_ROOT=${WORKSPACE_ROOT} \
 	OPENCV_VERSION=${OPENCV_VERSION} \
 	PYTHON_VERSION=${PYTHON_VERSION} \
+    NUMPY_VERSION_SPEC=${NUMPY_VERSION_SPEC} \
 	/tmp/ocv/install.sh && \
 	rm -rf /tmp/ocv
