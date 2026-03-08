@@ -15,6 +15,7 @@ DOCKER_DIR="${ROOT}/../docker"
 
 function usage() {
     print_info "Usage: ${0##*/}"
+    print_info "       [--progress plain|auto|tty]"
     print_info "Copyright (c) 2024, NVIDIA CORPORATION."
 }
 
@@ -25,6 +26,7 @@ ADDITIONAL_BUILD_ARGS=()
 ADDITIONAL_DOCKER_ARGS=()
 DOCKER_SEARCH_DIRS=(${DOCKER_DIR})
 SKIP_REGISTRY_CHECK=0
+BUILD_PROGRESS=
 BASE_DOCKER_REGISTRY_NAMES=("nvcr.io/nvidia/isaac/ros")
 
 # Read and parse config file if exists
@@ -55,7 +57,7 @@ if [ ${#CONFIG_DOCKER_SEARCH_DIRS[@]} -gt 0 ]; then
 fi
 
 # Parse command-line args
-VALID_ARGS=$(getopt -o hra:b:c:ki:n:d: --long help,skip_registry_check,build_arg:,base_image:,context_dir:,disable_buildkit,image_key:,image_name:,ignore_composite_keys,docker_arg: -- "$@")
+VALID_ARGS=$(getopt -o hra:b:c:ki:n:d: --long help,skip_registry_check,build_arg:,base_image:,context_dir:,disable_buildkit,image_key:,image_name:,ignore_composite_keys,progress:,docker_arg: -- "$@")
 eval set -- "$VALID_ARGS"
 while [ : ]; do
   case "$1" in
@@ -85,6 +87,10 @@ while [ : ]; do
         ;;
     -n | --image_name)
         TARGET_IMAGE_NAME="$2"
+        shift 2
+        ;;
+    --progress)
+        BUILD_PROGRESS="$2"
         shift 2
         ;;
     -r | --skip_registry_check)
@@ -148,6 +154,9 @@ fi
 
 if [[ $SKIP_REGISTRY_CHECK -eq 1  ]]; then
     print_warning "WARNING: Skipping remote registry check for prebuilt images"
+fi
+if [[ -n "$BUILD_PROGRESS" ]]; then
+    print_info "Docker build progress mode: ${BUILD_PROGRESS}"
 fi
 
 # Setup on-exit cleanup
@@ -349,6 +358,7 @@ for (( i=${#DOCKERFILES[@]}-1 ; i>=0 ; i-- )); do
      -t ${IMAGE_NAME} \
      ${BASE_IMAGE_ARG} \
      "${BUILD_ARGS[@]}" \
+        ${BUILD_PROGRESS:+--progress=${BUILD_PROGRESS}} \
      "${ADDITIONAL_DOCKER_ARGS[@]}" \
      $@ \
      ${DOCKER_CONTEXT_ARG}

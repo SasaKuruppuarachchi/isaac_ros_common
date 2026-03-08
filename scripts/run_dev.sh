@@ -15,6 +15,7 @@ source $ROOT/utils/print_color.sh
 
 function usage() {
     print_info "Usage: run_dev.sh {-d isaac_ros_dev directory path OPTIONAL}"
+    print_info "       [--progress plain|auto|tty]"
     print_info "Copyright (c) 2021-2024, NVIDIA CORPORATION."
 }
 
@@ -44,8 +45,9 @@ fi
 ISAAC_ROS_DEV_DIR="${ISAAC_ROS_WS}"
 SKIP_IMAGE_BUILD=0
 SKIP_REGISTRY_CHECK=0
+BUILD_PROGRESS=
 VERBOSE=0
-VALID_ARGS=$(getopt -o hvd:i:ba: --long help,verbose,isaac_ros_dev_dir:,image_key:,skip_image_build,skip-registry-check,docker_arg: -- "$@")
+VALID_ARGS=$(getopt -o hvd:i:ba: --long help,verbose,isaac_ros_dev_dir:,image_key:,skip_image_build,skip-registry-check,progress:,docker_arg: -- "$@")
 eval set -- "$VALID_ARGS"
 while [ : ]; do
   case "$1" in
@@ -64,6 +66,10 @@ while [ : ]; do
     --skip-registry-check)
         SKIP_REGISTRY_CHECK=1
         shift
+        ;;
+    --progress)
+        BUILD_PROGRESS="$2"
+        shift 2
         ;;
     -a | --docker_arg)
         DOCKER_ARGS+=("$2")
@@ -210,6 +216,9 @@ if [[ $SKIP_IMAGE_BUILD -ne 1 ]]; then
     BUILD_HELPER_ARGS=()
     if [[ $SKIP_REGISTRY_CHECK -eq 1 ]]; then
         BUILD_HELPER_ARGS+=("--skip_registry_check")
+    fi
+    if [[ -n "$BUILD_PROGRESS" ]]; then
+        BUILD_HELPER_ARGS+=("--progress" "$BUILD_PROGRESS")
     fi
 
     $ROOT/build_image_layers.sh --image_key "$BASE_IMAGE_KEY" --image_name "$BASE_NAME" "${BUILD_HELPER_ARGS[@]}"
