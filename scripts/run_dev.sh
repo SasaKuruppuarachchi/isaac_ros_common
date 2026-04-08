@@ -318,6 +318,7 @@ docker run -d -it --rm \
     -v $WORKSPACES_DIR/lidar_ws:/workspaces/lidar_ws \
     -v $WORKSPACES_DIR/logging:/workspaces/logging \
     -v $WORKSPACES_DIR/a2rl:/workspaces/a2rl \
+    -v $WORKSPACES_DIR/arrf:/workspaces/arrf \
     -v $WORKSPACES_DIR/ui:/workspaces/ui \
     -v $HOME/.profile:/home/admin/.profile \
     -v /etc/localtime:/etc/localtime:ro \

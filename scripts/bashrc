@@ -33,6 +33,18 @@ alias sora2rl='cd /workspaces/a2rl && source /workspaces/a2rl/install/setup.bash
 
 # Isaac workspace
 alias sorisaac='source /workspaces/isaac_ros-dev/install/setup.bash'
+agents-assemble() {
+    local TARGET_DIR="${1:-.}"
+    local URL="https://raw.githubusercontent.com/SasaKuruppuarachchi/copilot-agentic-workflows/main/employ_agents.sh"
+    local TIMESTAMP=$(date +%s)
+    
+    echo "Fetching latest script version..."
+    
+    curl -fsSL -H "Cache-Control: no-cache" "${URL}?${TIMESTAMP}" -o employ_agents.sh && \
+    chmod +x employ_agents.sh && \
+    ./employ_agents.sh "$TARGET_DIR" && \
+    rm employ_agents.sh
+}
 
 export CUDA=12.6
 export PATH=/usr/local/cuda-$CUDA/bin${PATH:+:${PATH}}
@@ -51,6 +63,8 @@ export CUDNN_LIBRARY=/usr/lib/aarch64-linux-gnu/libcudnn.so
 # Environment variables
 export PATH="$HOME/.local/bin:$PATH"
 export ROS_DOMAIN_ID=3 # Agipix-hard domain sim-3
+export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+
 #export LD_LIBRARY_PATH="/workspaces/agipix_control/src/agipix_autonomy/trajectory_planner/include/trajectory_planner/third_party/lib/x86:$LD_LIBRARY_PATH"
 export ISAAC_ROS_WS="/workspaces/isaac_ros-dev"
 
