@@ -68,3 +68,19 @@ RUN bash -c "$(curl -sLo- https://superfile.dev/install.sh)"
 RUN pip3 uninstall -y torchvision && pip3 install --pre torch torchvision torchaudio --index-url https://download.pytorch.org/whl/nightly/cu128 
 RUN pip3 install torchrl hydra-core && apt-get install ros-humble-octomap-server ros-humble-octomap-rviz-plugins
 
+# Install dependencies, download, build, and clean up Ceres 2.0.0
+RUN apt-get update && apt-get install -y \
+    build-essential cmake wget libgoogle-glog-dev libgflags-dev libatlas-base-dev \
+    && rm -rf /var/lib/apt/lists/* \
+    && wget -qO- https://github.com/ceres-solver/ceres-solver/archive/refs/tags/2.0.0.tar.gz | tar -xz -C /opt \
+    && mkdir /opt/ceres-solver-2.0.0/build \
+    && cd /opt/ceres-solver-2.0.0/build \
+    && cmake .. \
+       -DCMAKE_BUILD_TYPE=Release \
+       -DBUILD_EXAMPLES=OFF \
+       -DBUILD_TESTING=OFF \
+       -DSUITESPARSE=OFF \
+    && make -j$(nproc) && make install \
+    && rm -rf /opt/ceres-solver-2.0.0
+
+CMD ["/bin/bash"]
