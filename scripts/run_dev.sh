@@ -314,7 +314,6 @@ docker run -d -it --rm \
     -v $ISAAC_ROS_DEV_DIR:/workspaces/isaac_ros-dev/src/isaac_ros_common \
     -v $WORKSPACES_DIR/dds:/workspaces/dds \
     -v $WORKSPACES_DIR/agipix_control:/workspaces/agipix_control \
-    -v $WORKSPACES_DIR/upgrade_control:/workspaces/upgrade_control \
     -v $WORKSPACES_DIR/lidar_ws:/workspaces/lidar_ws \
     -v $WORKSPACES_DIR/logging:/workspaces/logging \
     -v $WORKSPACES_DIR/a2rl:/workspaces/a2rl \
